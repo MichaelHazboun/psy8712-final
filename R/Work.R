@@ -225,5 +225,5 @@ table_tbl <- tibble( #Chose to use a tibble over a data.frame to keep everything
 
 #Data Export
 gss_2018_tbl %>%
-  mutate(Income_12 = INCOME>=12)%>% #made income intro true false on if they make 25k and more or if they make less than 25k (this is to save processing time for the shinny app)
+  mutate(Income_10 = INCOME>=10)%>% #made income intro true false on if they make 15k and more or if they make less than 15k (this is to save processing time for the shinny app)
   saveRDS("../shiny/shiny_final/import.RDS") #exported as rds because it's the best file to export for R, won't go through any shenanigans of having a different exporting or importing of different data types
