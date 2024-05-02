@@ -1,7 +1,7 @@
 library(shiny) #required package
 library(ggplot2) #needed it for visualization, didn't use tidyverse to minimize run time
 
-import_tbl <- readRDS("import.RDS") #import data that will be used
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -28,10 +28,6 @@ ui <- fluidPage(
                        choices=c("Yes"=TRUE,
                                  "No"=FALSE),
                        selected = TRUE),
-          radioButtons("fifteen_k", 
-                       label = "Do you want to see the people that made less than 15k?",
-                       choices=c("Yes","No"),
-                       selected = "Yes"),
           radioButtons("colorline",
                        label = "What color do you want the line to be?",
                        choices=c("Red"="red",
@@ -54,24 +50,27 @@ ui <- fluidPage(
 )
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  import_tbl <- readRDS("import.RDS") #import data that will be used
 
     output$distPlot <- renderPlot({
-      if(input$fifteen_k == "No")  #did an if statement to define the desired dataset 
-      filtered_tbl <- filter(import_tbl, Income_10==TRUE) else filtered_tbl <- import_tbl
-    if(input$varselect == "ASTROSCI") #did an if statement to define the y values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
-      y_val <- filtered_tbl$ASTROSCI 
-    else if(input$varselect == "PARSOL")
-      y_val <-filtered_tbl$PARSOL 
-    else y_val <-filtered_tbl$NUMPETS
+
+      if(input$varselect == "ASTROSCI") #did an if statement to define the y values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
+        y_val <- import_tbl$ASTROSCI 
+      else if(input$varselect == "PARSOL")
+        y_val <-import_tbl$PARSOL 
+      else if(input$varselect == "AGE")
+        y_val <-import_tbl$AGE
+      else y_val <-import_tbl$NUMPETS
       
-        #same comments will not be restated
-        ggplot(filtered_tbl,aes(x=INCOME,y=y_val))+ #y is y_val to have it change with the options chosen
+      #same comments will not be restated
+      ggplot(import_tbl,aes(x=RINCOME,y=y_val))+ #y is y_val to have it change with the options chosen
         geom_jitter(width=0.3,height = 0.3,size=input$sizepoint,color=input$colorpoint)+ # allows people to change the shape and size of the points from the given options
         geom_smooth(method="lm", # the smaller sample size when I changed things to only 15K income and more was causing problems with the default method, so I switched to lm
                     se=as.logical(input$error), #had to add as.logical because the value was moving as character, this lets people remove or show the error bands as desired
                     color=input$colorline) # this allows them to change the color of the line to one of the three colors given
-
-            })
+      
+    })
 }
 
 # Run the application 

@@ -1,6 +1,6 @@
-# Hypothesis 1: a full model with everything, but other variables of family income, will predict income better than a reduced model with only 3 variables (number of pets, believes astrology is science and comparison to parents income at current age.)
-# Hypothesis 2: eXtreme Gradient Boosting will be the best model at prediction in the full model
-# Hypothesis 3: eXtreme Gradient Boosting will be the model that takes the most time to run in the full model
+# Hypothesis 1: Are age and income correlated? 
+# Hypothesis 2: Is income different based on how scientific you believe astrology to be, and if yes, which levels?
+# RQ 1: a full model with everything, but other variables of income, will predict income better (have a higher R squared) than a reduced model with only 4 variables (number of pets, believes astrology is science, age and comparison to parents income at current age.)
 
 # Script Settings and Resources
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -9,43 +9,61 @@ library(haven)
 library(caret)
 library(parallel) 
 library(doParallel)
-library(tictoc)
 
 # Data Import and Cleaning
 gss_2018_tbl<-read_sav(file="../data/GSS2018.sav") %>% #used read_sav over other options because this is a .sav file and felt the most appropriate tool to use (it's literally built for it)
   # select(-where(~mean(is.na(.))>0.75)) #used this initially to help discover my desired variables have at least 25% of the variables filled (if it wasn't in here but in the gss code book, then I don't want it). Select to pick the variables (just easy to use), then the criteria was that they didn't have 75% emptiness, and that was a quick easy and logical string to do that.
-    select(NUMPETS, INCOME, PARSOL, ASTROSCI) %>% #Used select because it was easy to use, kept the three variables of interest and my desired DV.
+    select(NUMPETS, INCOME, PARSOL, ASTROSCI, AGE) %>% #Used select because it was easy to use, kept the three variables of interest and my desired DV.
   drop_na((INCOME))%>% #drop_na is one of the few ways we can interact with NAs and I wanted to drop them, easiest function that came to mind
-  mutate(across(everything(), as.numeric)) #To make sure that everything works I need to make them numeric, doing mutate(across(everything())) was just simpler an easier than doing it with an apply (i'm not even sure if an apply function works, but I know this does and I don't see a reason why I should change it to test it right now)
+  mutate(across(everything(), as.numeric))%>% #To make sure that everything works I need to make them numeric, doing mutate(across(everything())) was just simpler an easier than doing it with an apply (i'm not even sure if an apply function works, but I know this does and I don't see a reason why I should change it to test it right now)
+  mutate(ASTROSCI= as.factor(ASTROSCI))
 
-gss_2018_tbl_2<-read_sav(file="../data/GSS2018.sav") %>% #used read_sav over other options because this is a .sav file and felt the most appropriate tool to use (it's literally built for it)
-  select(-where(~mean(is.na(.))>0.75)) %>% #used this initially to help discover my desired variables have at least 25% of the variables filled (if it wasn't in here but in the gss code book, then I don't want it). Select to pick the variables (just easy to use), then the criteria was that they didn't have 75% emptiness, and that was a quick easy and logical string to do that.
-  # select(contains("INCOM")) %>% #used this to find all the incomes in the dataset
+gss_2018_tbl_2<-read_sav(file="../data/GSS2018.sav") %>% 
+  select(-where(~mean(is.na(.))>0.75)) %>% 
   select(-INCOM16,-INCOME16,-RINCOM16,-RINCOME) %>% #got rid of all the other incomes
-  drop_na((INCOME))%>% #drop_na is one of the few ways we can interact with NAs and I wanted to drop them, easiest function that came to mind
-  mutate(across(everything(), as.numeric)) #To make sure that everything works I need to make them numeric, doing mutate(across(everything())) was just simpler an easier than doing it with an apply (i'm not even sure if an apply function works, but I know this does and I don't see a reason why I should change it to test it right now)
-
+  drop_na((INCOME))%>% 
+  mutate(across(everything(), as.numeric)) 
 
 #Visualization
 gss_2018_tbl %>% #got a warning message that said it removed rows, those rows are rows where income is astroci is NA so it's fine
-ggplot(aes(INCOME,ASTROSCI))+ #Used ggplot over base, because it's easier to make the graphs look pretty 
+ggplot(aes(ASTROSCI,INCOME))+ #Used ggplot over base, because it's easier to make the graphs look pretty 
   geom_jitter(width=0.3, height = 0.3)+ #added .3 jitter on both height and width because the base jitter lost the definition of each income bracket and smaller values were too dense to show true scale
-  geom_smooth() # added a line to show if any trends are present, left the SE bands because they show were most of the data is concentrated.
+  geom_smooth(method="lm") # added a line to show if any trends are present, left the SE bands because they show were most of the data is concentrated.
 #used a scatter plot to just see how the data is distributed differently
 
 gss_2018_tbl %>%  #same comments will not be restated
-  ggplot(aes(INCOME,NUMPETS))+ 
+  ggplot(aes(NUMPETS,INCOME))+ 
   geom_jitter()+ #removed the specifications on jitter because it was too cramped and this looks better
-  geom_smooth() 
+  geom_smooth(method="lm") 
 
 gss_2018_tbl %>%  #same comments will not be restated
-  ggplot(aes(INCOME,PARSOL))+ 
+  ggplot(aes(PARSOL,INCOME))+ 
   geom_jitter(width=0.3, height = 0.3)+ 
-  geom_smooth() 
+  geom_smooth(method="lm") 
+
+gss_2018_tbl %>%  #same comments will not be restated
+  ggplot(aes(AGE,INCOME))+ 
+  geom_jitter(width=0.3, height = 0.3)+ 
+  geom_smooth(method="lm") 
+
+gss_2018_tbl %>%
+  ggplot(aes(ASTROSCI,INCOME))+
+  geom_boxplot()
 
 
 #Analysis
 
+#Hypothesis 1, are income and age correlated? 
+cor.test(gss_2018_tbl$INCOME,gss_2018_tbl$AGE) #used cor.test instead of cor because cor.test just gives me all of the statistics I would need to report here, p, t and correlations, for less effort.
+
+
+#Hypothesis 2, Is income different based on how scientific you believe astrology to be, and if yes, which levels?
+model0<- aov(INCOME ~ASTROSCI,data=gss_2018_tbl)
+summary(model0)
+TukeyHSD(model0)
+
+
+#RQ 1 /Hypothesis or RQ 3
 # Reduced model
 holdout_indices <- createDataPartition(gss_2018_tbl$INCOME, #making a holdout_indices to split the data easily, used createdatapartition because it greate at making test/training partitions, better than other options like createResample, that's better for making bootstrap samples.
                                        p = .25, #Split the test group to 25% of my total data
@@ -126,7 +144,6 @@ test_tbl_2 <- gss_2018_tbl_2[holdout_indices_2,]
 training_tbl_2 <- gss_2018_tbl_2[-holdout_indices_2,]
 
 training_folds_2 <- createFolds(training_tbl_2$INCOME) 
-{tic() #using this to measure time, I'm using this instead of alternatives because it's the methods I've used the most and honestly it's too simple to mess up
 model4 <- train(
   INCOME ~ ., 
   training_tbl_2, 
@@ -138,7 +155,6 @@ model4 <- train(
                            verboseIter=T, 
                            indexOut = training_folds_2) 
 )
-model4toc<-toc()} #assigning how long it took to a variable
 model4
 cv_m4 <- max(model4$results$Rsquared) 
 holdout_m4 <- cor( 
@@ -146,7 +162,6 @@ holdout_m4 <- cor(
   test_tbl_2$INCOME
 )^2
 
-{tic() #explained tic toc once, no need to repeat
 model5 <- train( 
   INCOME ~ .,
   training_tbl_2,
@@ -159,7 +174,6 @@ model5 <- train(
                            indexOut = training_folds_2)
 ) #Got the following error :In nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,  :There were missing values in resampled performance measures.
 #choosing to ignore this message because it's just saying that there are some missing values and I know that
-model5toc<-toc() }
 model5
 cv_m5 <- max(model5$results$Rsquared) 
 holdout_m5 <- cor( 
@@ -167,7 +181,6 @@ holdout_m5 <- cor(
   test_tbl_2$INCOME
 )^2
 
-{tic()
 model6 <- train(
   INCOME ~ .,
   training_tbl_2,
@@ -179,7 +192,6 @@ model6 <- train(
                            verboseIter=T, 
                            indexOut = training_folds_2)
 )
-model6toc<- toc()}
 model6
 cv_m6 <- max(model6$results$Rsquared) 
 holdout_m6 <- cor( 
@@ -192,9 +204,10 @@ registerDoSEQ()
 #These two lines are to stop parallalization
 
 
+
 #Publication
 
-table_tbl <- tibble( #Chose to use a tibble over a data.frame to keep everything within tidyverse, plus I prefer how the output looks
+table_tbl <- data.frame( #Chose to use a tibble over a data.frame to keep everything within tidyverse, plus I prefer how the output looks
   algo = c("elastic net","random forests","xgboost"), # just filling in the table, will not comment on most of these
   cv_rqs_reduced = c(
     cv_m1,
@@ -214,16 +227,12 @@ table_tbl <- tibble( #Chose to use a tibble over a data.frame to keep everything
     holdout_m4,
     holdout_m5,
     holdout_m6
-  ),
-  time_full= c( #I choose to pull the callback_msg from the tocs because I won't be using these in any calculations so I feel like it's fine. Plus the added text is nice
-    model4toc$callback_msg,
-    model5toc$callback_msg,
-    model6toc$callback_msg
   )
 )
+write_csv(table_tbl, file="../out/model_comp.csv")
 
 
 #Data Export
 gss_2018_tbl %>%
-  mutate(Income_10 = INCOME>=10)%>% #made income intro true false on if they make 15k and more or if they make less than 15k (this is to save processing time for the shinny app)
+  mutate(AGE_25= AGE>=25)%>%
   saveRDS("../shiny/shiny_final/import.RDS") #exported as rds because it's the best file to export for R, won't go through any shenanigans of having a different exporting or importing of different data types

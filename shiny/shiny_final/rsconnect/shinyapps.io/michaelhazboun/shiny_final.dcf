@@ -1,0 +1,10 @@
+name: shiny_final
+title:
+username: michaelhazboun
+account: michaelhazboun
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11916386
+bundleId: 8566593
+url: https://michaelhazboun.shinyapps.io/shiny_final/
+version: 1
