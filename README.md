@@ -34,4 +34,4 @@ This folder contains the model_comp.csv file, which shows the R squares of the v
 
 #### runtime.txt and install.R
 
-This files are utilized in the creation of a functional web-based binder with the version of R and the packages utilized when the project was first made. The binder can be access [here]
+This files are utilized in the creation of a functional web-based binder with the version of R and the packages utilized when the project was first made. The binder can be access [here](https://mybinder.org/v2/gh/MichaelHazboun/psy8712-final/HEAD?urlpath=rstudio).
