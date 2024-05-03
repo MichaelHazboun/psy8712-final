@@ -1,7 +1,3 @@
-# Hypothesis 1: Are age and income correlated? 
-# Hypothesis 2: Is income different based on how scientific you believe astrology to be, and if yes, which levels?
-# RQ 1: a full model with everything, but other variables of income, will predict income better (have a higher R squared) than a reduced model with only 4 variables (number of pets, believes astrology is science, age and comparison to parents income at current age.)
-
 # Script Settings and Resources
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(tidyverse)

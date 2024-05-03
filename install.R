@@ -1,0 +1,1 @@
+install.packages(c("doParallel","parallel","caret","haven","tidyverse","shiny"))
