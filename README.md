@@ -1,8 +1,6 @@
 # psy8712-final
 
-This repository an analysis on the 2018 General Social Survey (GSS) data set, which can be found [here](https://gss.norc.org/get-the-data/spss). The analyses are primarily focused on the relationship between family income and various other variables, such as age and number of pets owned. Additionally, the data set is used in an attempt to predict income through the utilization of a large number of the variables in the data set.
-
-It produced the following [shiny app](https://michaelhazboun.shinyapps.io/shiny_final/) that can be utilized to learn more about our reduced model.
+This repository is an analysis of the 2018 General Social Survey (GSS) data set, which can be found [here](https://gss.norc.org/get-the-data/spss). The analyses are primarily focused on the relationship between family income and various other variables, such as age and number of pets owned. Additionally, the data set is used in an attempt to predict income through the utilization of machine learning on a large number of the variables in the data set. Various machine learning models were utilized and a comparison document, of the models, is provided within the larger repository. A[ shiny app](https://michaelhazboun.shinyapps.io/shiny_final/) is also created that can be utilized to learn more about our reduced model. A fully functional web-based binder, with the version of R and the packages utilized when the project was first made is also provided, and can be accessed [here](https://mybinder.org/v2/gh/MichaelHazboun/psy8712-final/HEAD?urlpath=rstudio).
 
 ## Project Reproduction:
 
@@ -26,7 +24,7 @@ This folder contains Work.R which contains all the code that's needed to import 
 
 This folder contains the shiny_final folder which contains the app.R file and import.RDS file (which was an output from the Work.R file). This folder and everything in it are what's utilized to both run the shiny and deploy it.
 
-### out 
+### out
 
 This folder contains the model_comp.csv file, which shows the R squares of the various models run across both two separate validation strategies. That file is also an output of the Work.R file.
 

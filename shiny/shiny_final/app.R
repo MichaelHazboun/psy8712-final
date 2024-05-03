@@ -2,7 +2,6 @@ library(shiny) #required package
 library(ggplot2) #needed it for visualization, didn't use tidyverse to minimize run time
 library(dplyr) #needed for filtering
 
-
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -98,7 +97,7 @@ server <- function(input, output) {
       else filter_tbl <- import_tbl
       
       if(input$yselect == "ASTROSCI") #did an if statement to define the y values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
-        y_val <- 4-as.numeric(filter_tbl$ASTROSCI) #because this is a factor, made it numeric so that the correlation works and did 4- to it because it's reverse coded.
+        y_val <- as.numeric(filter_tbl$ASTROSCI) #because this is a factor, made it numeric so that the correlation works.
       else if(input$yselect == "PARSOL")
         y_val <-filter_tbl$PARSOL 
       else if(input$yselect == "AGE")
@@ -108,7 +107,7 @@ server <- function(input, output) {
       else y_val <-filter_tbl$NUMPETS
       
       if(input$xselect == "ASTROSCI") #did an if statement to define the y values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
-        x_val <- 4-as.numeric(filter_tbl$ASTROSCI) 
+        x_val <- as.numeric(filter_tbl$ASTROSCI) 
       else if(input$xselect == "PARSOL")
         x_val <-filter_tbl$PARSOL 
       else if(input$xselect == "AGE")
