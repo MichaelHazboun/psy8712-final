@@ -207,7 +207,7 @@ registerDoSEQ()
 
 #Publication
 
-table_tbl <- data.frame( #Chose to use a tibble over a data.frame to keep everything within tidyverse, plus I prefer how the output looks
+table_1 <- data.frame( #Chose to use data.frame instead of tibble, because the default display shows to more decimal places and the cv_rqs_full was 0.9997829 and was just displaying as 1 when I used tibble.
   algo = c("elastic net","random forests","xgboost"), # just filling in the table, will not comment on most of these
   cv_rqs_reduced = c(
     cv_m1,
@@ -229,10 +229,10 @@ table_tbl <- data.frame( #Chose to use a tibble over a data.frame to keep everyt
     holdout_m6
   )
 )
-write_csv(table_tbl, file="../out/model_comp.csv")
+write_csv(table_1, file="../out/model_comp.csv") #used write_csv instead of RDS, because it's a table and this is the final version of it, never to be used again, so I wanted it to be a csv file that's dumpped into out.
 
 
 #Data Export
 gss_2018_tbl %>%
-  mutate(AGE_25= AGE>=25)%>%
+  mutate(AGE_25= AGE>=25)%>% #made a new variable that has TRUE for when the age is 25 or older to reduce processing time when I run the app.
   saveRDS("../shiny/shiny_final/import.RDS") #exported as rds because it's the best file to export for R, won't go through any shenanigans of having a different exporting or importing of different data types
