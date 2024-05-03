@@ -6,7 +6,7 @@ library(dplyr) #needed for filtering
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
-    titlePanel("Three potential predictors of income"), #set title
+    titlePanel("The relationship between multiple variables"), #set title
 
     # Sidebar 
     sidebarLayout(
