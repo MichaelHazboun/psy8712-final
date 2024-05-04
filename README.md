@@ -14,11 +14,11 @@ This folder contains the original data that's utilized in the R folder
 
 ### docs
 
-This folder contains the gss handbook, which can be read to gain a deeper understanding of the utilized data set.
+This folder contains the various documentation that are associated with the project. For example, it contains the gss handbook, which can be read to gain a deeper understanding of the utilized data set, as well as the final.docx file, which contains APA-style write-up associate with this project.
 
 ### R
 
-This folder contains Work.R which contains all the code that's needed to import the data from the data folder, analyse it and output the data for visual inspections, in the case of the out folder, or for further use, in the case of the shiny/shiny_final folder.
+This folder contains Work.R which contains all the code that's needed to import the data from the data folder, analyse it and output the data for visual inspections, in the case of the out and figs folders, or for further use, in the case of the shiny/shiny_final folder.
 
 ### shiny
 
@@ -26,7 +26,11 @@ This folder contains the shiny_final folder which contains the app.R file and im
 
 ### out
 
-This folder contains the model_comp.csv file, which shows the R squares of the various models run across both two separate validation strategies. That file is also an output of the Work.R file.
+This folder contain all data output that have been exported from the project. Some examples include the Tukey analysis output as Tukey_thing.csv, or the descriptive statistics of some variables that were utilized in the project under descrip_stats.csv, or even the model_comp.csv file, which shows the R squares of the various models run across both two separate validation strategies.
+
+### figs
+
+This folder contains all visualization outputs from the project.
 
 ### Miscellaneous files in the main directory:
 
