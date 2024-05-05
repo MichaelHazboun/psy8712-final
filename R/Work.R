@@ -63,6 +63,10 @@ ggplot(aes(ASTROSCI,INCOME))+ #Used ggplot over base, because it's easier to mak
 #Hypothesis 1, are income and age correlated? 
 correlation_thing<- cor.test(gss_2018_tbl$INCOME,gss_2018_tbl$AGE) #used cor.test instead of cor because cor.test just gives me all of the statistics I would need to report here, p, t and correlations, for less effort.
 
+(gss_2018_tbl %>% #Put the visualization here because it's supposed to acompany this analysis
+    ggplot(aes(AGE,INCOME))+ 
+    geom_jitter(width=0.3, height = 0.3) +
+    geom_smooth(method = "lm"))
 
 #Hypothesis 2, Is income different based on how scientific you believe astrology to be, and if yes, which levels?
 model0<- aov(INCOME ~ASTROSCI,data=gss_2018_tbl)

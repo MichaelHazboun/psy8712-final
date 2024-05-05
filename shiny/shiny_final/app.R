@@ -63,7 +63,7 @@ server <- function(input, output) {
     output$distPlot <- renderPlot({
       
       if(input$age25==FALSE)
-        filter_tbl <- filter(import_tbl, AGE_25==TRUE) 
+        filter_tbl <- filter(import_tbl, AGE_25==TRUE)  #made a filter so the dataset would change based on options selected
       else filter_tbl <- import_tbl
       
       if(input$yselect == "ASTROSCI") #did an if statement to define the y values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
@@ -76,7 +76,7 @@ server <- function(input, output) {
         y_val <-filter_tbl$INCOME
       else y_val <-filter_tbl$NUMPETS
       
-      if(input$xselect == "ASTROSCI") #did an if statement to define the y values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
+      if(input$xselect == "ASTROSCI") #did an if statement to define the x values used based on the selected options. If was just simple, logical and easy, the first thing that came to mind on how I could do what I wanted, quickly.
         x_val <- filter_tbl$ASTROSCI 
       else if(input$xselect == "PARSOL")
         x_val <-filter_tbl$PARSOL 
